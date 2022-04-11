@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/carInspectionManagment/carInspectionManagment/WeatherForecast.cs
+/carInspectionManagment/carInspectionManagment/obj/Debug/net5.0
+/carInspectionManagment/carInspectionManagment/obj
+/carInspectionManagment/CarInspectionManagment.Business/bin/Debug/net5.0
+/carInspectionManagment/CarInspectionManagment.Business/obj
+/carInspectionManagment/carInspectionManagment/bin/Debug/net5.0
