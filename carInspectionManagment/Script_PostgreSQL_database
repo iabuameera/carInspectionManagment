@@ -1,0 +1,29 @@
+-- Database: CarInspectionManagement
+
+--DROP DATABASE IF EXISTS "CarInspectionManagement_test";
+
+CREATE DATABASE "CarInspectionManagement_test"
+    WITH 
+    OWNER = cars
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'English_United States.1252'
+    LC_CTYPE = 'English_United States.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+
+-- Table: public.CarInspection 
+-- DROP TABLE IF EXISTS public."CarInspection ";
+--------------------------------
+CREATE TABLE IF NOT EXISTS public."CarInspection "
+(
+    "DateOfCreation" date NOT NULL,
+    "VINNumber " character varying(100) COLLATE pg_catalog."default",
+    "Reason " character varying(50) COLLATE pg_catalog."default",
+    "Id" bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1 ),
+    CONSTRAINT "CarInspection _pkey" PRIMARY KEY ("Id")
+)
+
+TABLESPACE pg_default;
+
+--ALTER TABLE IF EXISTS public."CarInspection "
+   -- OWNER to cars;
