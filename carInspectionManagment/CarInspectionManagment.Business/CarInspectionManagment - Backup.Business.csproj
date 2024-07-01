@@ -34,7 +34,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CarInspectionManagment.Contract\CarInspectionManagment.Contract.csproj" />
-    <ProjectReference Include="..\ConnecterLayer\ConnecterLayer.csproj" />
   </ItemGroup>
 
 </Project>

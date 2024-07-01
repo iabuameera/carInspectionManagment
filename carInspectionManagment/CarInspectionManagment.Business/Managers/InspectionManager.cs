@@ -6,6 +6,8 @@ using CarInspectionManagment.Contract;
 using CarInspectionManagment.Contract.Filters;
 using CarInspectionManagment.Contract.Inspection.Models;
 using CarInspectionManagment.Contract.Inspection.Resource;
+using MassTransit;
+using MassTransit.Transports;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,15 +27,21 @@ namespace CarInspectionManagment.Business.Managers
     {
         private readonly IInspectionRepository _inspectionRepository;
         private readonly ICarInspectionViewCacheManager _carInspectionViewCacheManager;
-        public InspectionManager(IInspectionRepository inspectionRepository, ICarInspectionViewCacheManager carInspectionViewCacheManager )
+        private readonly IPublishEndpoint _publishEndpoint;
+        public InspectionManager(IInspectionRepository inspectionRepository, ICarInspectionViewCacheManager carInspectionViewCacheManager, IPublishEndpoint publishEndpoint)
         {
             _inspectionRepository = inspectionRepository;
             _carInspectionViewCacheManager = carInspectionViewCacheManager;
+            _publishEndpoint = publishEndpoint;
         }
         public async Task<List<InspectionResource>> GetInspectionsAsync(InspectionListFilter filters)
         {
             var entities = await _inspectionRepository.LoadinspectionsAsync(filters);
-            return entities.Select(_=>_.ToResource()).ToList();
+            var result = entities.Select(_ => _.ToResource()).ToList();
+
+            await _publishEndpoint.Publish(new GetInspectionsResponse { Inspections = result });
+
+            return result;
         }
 
         public async Task<InspectionResource> GetInspectionByIdAsync(int id)
@@ -48,15 +56,16 @@ namespace CarInspectionManagment.Business.Managers
             model.EnsureValidModel();
             var entity = new CarInspection
             {
-                DateOfCreation=model.DateOfCreation,
-                Vinnumber=model.Vinnumber,
-                Reason=model.Reason
+                DateOfCreation = model.DateOfCreation,
+                Vinnumber = model.Vinnumber,
+                Reason = model.Reason
             };
 
             await _inspectionRepository.CreateInspectionAsync(entity);
             var resource = entity.ToResource();
+            await _carInspectionViewCacheManager.SetCarInspectAsync(resource);
 
-            await  _carInspectionViewCacheManager.SetCarInspectAsync(resource);
+            await _publishEndpoint.Publish(new CreateInspectionResponse { Inspection = resource });
 
             return resource;
         }

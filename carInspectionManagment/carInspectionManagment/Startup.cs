@@ -3,6 +3,8 @@ using Autofac.Extensions.DependencyInjection;
 using CarInspectionManagment.Business.Infrastructure;
 using CarInspectionManagment.Business.Managers;
 using CarInspectionManagment.Business.Persistence.Repositories;
+using ConncterLayer;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -40,6 +42,30 @@ namespace carInspectionManagment
             services.AddServerTiming();
             services.AddDependencyInjection("User ID =cars;Password=1234;Server=localhost;Port=5432;Database=CarInspectionManagement ;Integrated Security=true;Pooling=true;");
 
+            services.AddMassTransit(config =>
+            {
+                config.AddConsumer<GetInspectionsResponseConsumer>();
+                config.AddConsumer<CreateInspectionResponseConsumer>();
+
+                config.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host(new Uri("rabbitmq://localhost:5672"), h =>
+                    {
+                        h.Username("guest");
+                        h.Password("guest");
+                    });
+
+                    //cfg.ReceiveEndpoint("creates_queue", e =>
+                    //{
+                    //    e.ConfigureConsumer<CreateInspectionResponseConsumer>(context);
+                    //});
+                    //cfg.ReceiveEndpoint("gets_queue", e =>
+                    //{
+                    //    e.ConfigureConsumer<GetInspectionsResponseConsumer>(context);
+                    //});
+                });
+
+            });
 
         }
 
