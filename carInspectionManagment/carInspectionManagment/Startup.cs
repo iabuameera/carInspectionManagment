@@ -44,8 +44,8 @@ namespace carInspectionManagment
 
             services.AddMassTransit(config =>
             {
-                config.AddConsumer<GetInspectionsResponseConsumer>();
-                config.AddConsumer<CreateInspectionResponseConsumer>();
+                config.AddConsumer<GetInspectionCacheUpdaterConsumer>();
+                config.AddConsumer<CreateInspectionCacheUpdaterConsumer>();
 
                 config.UsingRabbitMq((context, cfg) =>
                 {
@@ -54,15 +54,6 @@ namespace carInspectionManagment
                         h.Username("guest");
                         h.Password("guest");
                     });
-
-                    //cfg.ReceiveEndpoint("creates_queue", e =>
-                    //{
-                    //    e.ConfigureConsumer<CreateInspectionResponseConsumer>(context);
-                    //});
-                    //cfg.ReceiveEndpoint("gets_queue", e =>
-                    //{
-                    //    e.ConfigureConsumer<GetInspectionsResponseConsumer>(context);
-                    //});
                 });
 
             });

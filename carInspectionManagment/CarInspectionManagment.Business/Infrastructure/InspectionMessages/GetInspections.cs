@@ -14,19 +14,4 @@ namespace CarInspectionManagment.Business.Managers
         public InspectionListFilter Filters { get; set; }
     }
 
-    public class GetInspectionsResponse
-    {
-        public List<InspectionResource> Inspections { get; set; }
-    }
-
-    public class CreateInspection
-    {
-        public InspectionModel Model { get; set; }
-    }
-
-    public class CreateInspectionResponse
-    {
-        public InspectionResource Inspection { get; set; }
-    }
-
 }

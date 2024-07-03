@@ -24,7 +24,7 @@ namespace ConncterLayer
 
                 cfg.ReceiveEndpoint("create_queue", e =>
                 {
-                    e.Handler<CreateInspectionResponseConsumer>(ctx =>
+                    e.Handler<CreateInspectionCacheUpdaterConsumer>(ctx =>
                     {
                         return Console.Out.WriteLineAsync(ctx.Message.ToString());
                     });
@@ -32,7 +32,7 @@ namespace ConncterLayer
                 });
                 cfg.ReceiveEndpoint("get_queue", e =>
                 {
-                    e.Handler<GetInspectionsResponseConsumer>(ctx =>
+                    e.Handler<GetInspectionCacheUpdaterConsumer>(ctx =>
                     {
                         return Console.Out.WriteLineAsync(ctx.Message.ToString());
                     });
@@ -40,30 +40,7 @@ namespace ConncterLayer
                 });
             });
             bus.Start();
-            //services.AddMassTransit(config =>
-            //{
-            //    config.AddConsumer<GetInspectionsResponseConsumer>();
-            //    config.AddConsumer<CreateInspectionResponseConsumer>();
 
-            //    config.UsingRabbitMq((context, cfg) =>
-            //    {
-            //        cfg.Host(new Uri("rabbitmq://localhost:5672"), h =>
-            //        {
-            //            h.Username("guest");
-            //            h.Password("guest");
-            //        });
-
-            //        cfg.ReceiveEndpoint("creates_queue", e =>
-            //        {
-            //            e.ConfigureConsumer<CreateInspectionResponseConsumer>(context);
-            //        });
-            //        cfg.ReceiveEndpoint("gets_queue", e =>
-            //        {
-            //            e.ConfigureConsumer<GetInspectionsResponseConsumer>(context);
-            //        });
-            //    });
-
-            //});
         }
     }
 }

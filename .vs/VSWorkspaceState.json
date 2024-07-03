@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\carInspectionManagment",
+    "\\carInspectionManagment\\ConnecterLayer"
   ],
-  "SelectedNode": "\\carInspectionManagment.sln",
+  "SelectedNode": "\\carInspectionManagment\\ConnecterLayer\\GetInspectionsResponseConsumer.cs",
   "PreviewInSolutionExplorer": false
 }

@@ -55,7 +55,7 @@ namespace CarInspectionManagment.Business.Managers.ViewCache
         public async Task SetCarInspectAsync(InspectionResource resource)
         {
             string carInspect = JsonConvert.SerializeObject(resource);
-            var key = $"Inspection_key_{resource.Vinnumber}_{resource.DateOfCreation}";
+            var key = $"Inspection_key_{resource.Vinnumber}_{resource.DateOfCreation}_{resource.Reason}";
             await _distributedCache.SetStringAsync(key, carInspect);
 
         }

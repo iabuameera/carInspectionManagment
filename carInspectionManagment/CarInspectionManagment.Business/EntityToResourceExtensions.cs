@@ -24,5 +24,18 @@ namespace CarInspectionManagment.Business
                
             };
         }
+        public static InspectionResource ToInspectionResources(this InspectionResource entity)
+        {
+            if (entity == null) return null;
+
+            return new InspectionResource
+            {
+                Id = entity.Id,
+                DateOfCreation = entity.DateOfCreation,
+                Reason = entity.Reason,
+                Vinnumber = entity.Vinnumber
+
+            };
+        }
     }
 }
