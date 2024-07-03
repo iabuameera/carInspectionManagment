@@ -1,5 +1,9 @@
 ﻿using CarInspectionManagment.Business.Managers;
+using CarInspectionManagment.Business.Managers.ViewCache;
+using CarInspectionManagment.Contract.Inspection.Resource;
+using ConnecterLayer;
 using MassTransit;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +14,41 @@ namespace ConncterLayer
 {
     public class GetInspectionsResponseConsumer : IConsumer<GetInspectionsResponse>
     {
-        public Task Consume(ConsumeContext<GetInspectionsResponse> context)
+
+        private readonly ICarInspectionViewCacheManager _carInspectionViewCacheManager;
+
+        public GetInspectionsResponseConsumer(ICarInspectionViewCacheManager carInspectionViewCacheManager)
         {
-            var inspections = context.Message.Inspections;
-            Console.WriteLine("Received inspections:");
-            foreach (var inspection in inspections)
-            {
-                Console.WriteLine($"- id:{inspection.Id}, VINNO:{inspection.Vinnumber},Reason:{inspection.Reason}");
-            }
-            return Task.CompletedTask;
+            _carInspectionViewCacheManager = carInspectionViewCacheManager;
         }
+
+        public async Task Consume(ConsumeContext<GetInspectionsResponse> context)
+        {
+            var result = await _carInspectionViewCacheManager.GetInspectionsAsync();
+            var inspections = context.Message.Inspections;
+            var response = new GetInspectionsResponse();
+
+            if (inspections.SequenceEqual(result))
+            {
+                response = new GetInspectionsResponse
+                {
+                    Inspections = result,
+                };
+            }
+            else
+            {
+                response = new GetInspectionsResponse
+                {
+                    Inspections = inspections,
+                };
+            }
+
+            await context.RespondAsync<GetInspectionsResponse>(new
+            {
+                 Inspections = response,
+            });
+        }
+
+
     }
 }

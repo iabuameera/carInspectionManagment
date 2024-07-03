@@ -7,6 +7,7 @@ using CarInspectionManagment.Contract.Filters;
 using CarInspectionManagment.Contract.Inspection.Models;
 using CarInspectionManagment.Contract.Inspection.Resource;
 using MassTransit;
+using MassTransit.Clients;
 using MassTransit.Transports;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,22 +27,44 @@ namespace CarInspectionManagment.Business.Managers
     public class InspectionManager : IInspectionManager
     {
         private readonly IInspectionRepository _inspectionRepository;
-        private readonly ICarInspectionViewCacheManager _carInspectionViewCacheManager;
+
         private readonly IPublishEndpoint _publishEndpoint;
-        public InspectionManager(IInspectionRepository inspectionRepository, ICarInspectionViewCacheManager carInspectionViewCacheManager, IPublishEndpoint publishEndpoint)
+        private readonly IRequestClient<GetInspectionsResponse> _client;
+        public InspectionManager(IInspectionRepository inspectionRepository, IRequestClient<GetInspectionsResponse> client, IPublishEndpoint publishEndpoint)
         {
             _inspectionRepository = inspectionRepository;
-            _carInspectionViewCacheManager = carInspectionViewCacheManager;
+            _client = client;
             _publishEndpoint = publishEndpoint;
         }
         public async Task<List<InspectionResource>> GetInspectionsAsync(InspectionListFilter filters)
         {
+            // publish message to get from cache
+            var key = $"Inspection_key_{filters.Vinnumber}_{filters.DateOfCreation}";
+
+            var response = await _client.GetResponse<GetInspectionsResponse>(key);
+
+            if (response.Message.Inspections != null && response.Message.Inspections.Any())
+            {
+                return response.Message.Inspections.Select(entity => new InspectionResource
+                {
+                    Id = entity.Id,
+                    Vinnumber = entity.Vinnumber,
+                    DateOfCreation = entity.DateOfCreation,
+
+                }).ToList();
+            }
+
             var entities = await _inspectionRepository.LoadinspectionsAsync(filters);
             var result = entities.Select(_ => _.ToResource()).ToList();
 
             await _publishEndpoint.Publish(new GetInspectionsResponse { Inspections = result });
 
+
             return result;
+      
+
+           // _publishEndpoint.send (new GetInspectionsResponse { Inspections = result });
+         
         }
 
         public async Task<InspectionResource> GetInspectionByIdAsync(int id)
@@ -63,7 +86,7 @@ namespace CarInspectionManagment.Business.Managers
 
             await _inspectionRepository.CreateInspectionAsync(entity);
             var resource = entity.ToResource();
-            await _carInspectionViewCacheManager.SetCarInspectAsync(resource);
+            //await _carInspectionViewCacheManager.SetCarInspectAsync(resource);
 
             await _publishEndpoint.Publish(new CreateInspectionResponse { Inspection = resource });
 
@@ -80,7 +103,7 @@ namespace CarInspectionManagment.Business.Managers
 
             await _inspectionRepository.UpdateInspectionAsync(entity);
             var resource = entity.ToResource();
-            await _carInspectionViewCacheManager.SetCarInspectAsync(resource);
+            //await _carInspectionViewCacheManager.SetCarInspectAsync(resource);
             return resource;
         }
 
@@ -91,7 +114,7 @@ namespace CarInspectionManagment.Business.Managers
             
             await _inspectionRepository.DeleteInspection(entity);
             var resource = entity.ToResource();
-           await _carInspectionViewCacheManager.DeleteCarInspectAsync(resource);
+          // await _carInspectionViewCacheManager.DeleteCarInspectAsync(resource);
         }
 
         
