@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option csharp_namespace = "CarInspectionManagment.Business";
+
+service CarsService {
+  rpc GetInspectionsById (Id) returns (CarResponse);
+}
+
+message Empty {}
+
+message Car {
+  string Id = 1;
+  DateTime DateOfCreation = 2;
+  string Vinnumber = 3;
+  string Reason = 4;
+}
+
+message CarResponse {
+  repeated Car cars = 1;
+}

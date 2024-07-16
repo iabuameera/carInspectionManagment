@@ -1,0 +1,6 @@
+C:\Users\void\source\repos\carInspectionManagment\carInspectionManagment\GrpcClient\obj\Debug\net5.0\GrpcClient.csproj.AssemblyReference.cache
+C:\Users\void\source\repos\carInspectionManagment\carInspectionManagment\GrpcClient\obj\Debug\net5.0\GrpcClient.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\void\source\repos\carInspectionManagment\carInspectionManagment\GrpcClient\obj\Debug\net5.0\GrpcClient.AssemblyInfoInputs.cache
+C:\Users\void\source\repos\carInspectionManagment\carInspectionManagment\GrpcClient\obj\Debug\net5.0\GrpcClient.AssemblyInfo.cs
+C:\Users\void\source\repos\carInspectionManagment\carInspectionManagment\GrpcClient\obj\Debug\net5.0\GrpcClient.csproj.CoreCompileInputs.cache
+C:\Users\void\source\repos\carInspectionManagment\carInspectionManagment\GrpcClient\obj\Debug\net5.0\GrpcClient.sourcelink.json
