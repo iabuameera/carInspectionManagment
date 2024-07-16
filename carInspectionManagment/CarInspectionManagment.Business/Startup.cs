@@ -72,7 +72,7 @@ namespace carInspectionManagment
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapGrpcService<GreeterService>();
+                endpoints.MapGrpcService<CarGrpcService>();
 
                 endpoints.MapGet("/", async context =>
                 {
