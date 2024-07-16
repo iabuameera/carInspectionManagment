@@ -1,13 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Protos\**" />
+    <EmbeddedResource Remove="Protos\**" />
+    <None Remove="Protos\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac" Version="6.3.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.2.0" />
     <PackageReference Include="Castle.Core" Version="4.4.1" />
+    <PackageReference Include="Google.Protobuf" Version="3.27.2" />
+    <PackageReference Include="Grpc.Tools" Version="2.64.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Lib.AspNetCore.ServerTiming" Version="4.3.0" />
     <PackageReference Include="MassTransit" Version="8.2.3" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
@@ -32,7 +43,11 @@
     
   </ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
+		<Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
+	</ItemGroup>
+
+	<ItemGroup>
     <ProjectReference Include="..\CarInspectionManagment.Contract\CarInspectionManagment.Contract.csproj" />
     <!--<ProjectReference Include="..\ConnecterLayer\ConnecterLayer.csproj" />-->
   </ItemGroup>
